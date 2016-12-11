@@ -1,0 +1,15 @@
+{
+    "name": "nifa-dev/permissions",
+    "description": "Basic Role Based Permissions",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "rbac"],
+    "homepage": "",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jared Testa",
+            "homepage": "",
+            "role": "Author"
+        }
+    ]
+}
