@@ -11,5 +11,10 @@
             "homepage": "",
             "role": "Author"
         }
-    ]
+    ],
+    "autoload": {
+    "psr-4": {
+        "Permissions\\": "src"
+    }
+}
 }
