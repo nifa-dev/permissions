@@ -25,17 +25,16 @@ class RolesShell extends Shell
             $actionRole['action_id'] = $action->id;
             $actionRole['role_id'] = $superuserId;
 
-            if($aR = $this->ActionsRoles->find()->where($actionRole)->first()) {
-                $entity = $this->ActionsRoles->patchEntity($aR, $actionRole);
-            } else {
+            if(!$this->ActionsRoles->exists($actionRole)) {
                 $entity = $this->ActionsRoles->newEntity($actionRole);
+                if($this->ActionsRoles->save($entity)) {
+                    $this->out("Action was added to Superuser Role");
+                } else {
+                    $this->out("Failed to add action to Superuser Role");
+                }
             }
 
-            if($this->ActionsRoles->save($entity)) {
-                $this->out("Action was added to Superuser Role");
-            } else {
-                $this->out("Failed to add action to Superuser Role");
-            }
+
         }
     }
 

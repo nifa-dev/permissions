@@ -34,13 +34,20 @@ class ActionsShell extends Shell
         foreach($actions as $action) {
             //$action = $this->createEntity($actions);
             //$this->out(json_encode($action));
+            //remove app prefix
+            if(array_key_exists('prefix', $action)) {
+                if($action['prefix'] == 'app') $action['prefix'] = null;
+            }
 
-            $entity = $this->createEntity($action);
-            if($result = $this->Actions->save($entity)) {
-                if($entity->isNew()) $this->out("Created " . implode(",", $action));
-                else $this->out("Updated " . implode(",", $action));
-            } else {
-                $this->out("Failed to save " . implode(",", $action));
+
+            if(!$this->Actions->exists($action)) {
+
+                $entity = $this->Actions->newEntity($action);
+                if($this->Actions->save($entity)) {
+                    $this->out("Saved " . implode(",", $action));
+                } else {
+                    $this->out("Failed to Save " . implode(",", $action));
+                }
             }
         }
     }
