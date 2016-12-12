@@ -33,6 +33,10 @@ class ActionsShell extends Shell
         //$this->out(json_encode($actions));
         foreach($actions as $action) {
 
+            if(array_key_exists('prefix', $action)) {
+                if($action['prefix'] == 'app') $action['prefix'] = null;
+            }
+
             if(!$this->Actions->exists($action)) {
                 $entity = $this->Actions->newEntity($action);
                 if($this->Actions->save($entity)) {
