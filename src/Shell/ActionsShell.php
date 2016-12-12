@@ -25,22 +25,24 @@ class ActionsShell extends Shell
 
     
     public function test() {
-        $this->out(json_encode($this->getControllers('NifaUsers')));
+        $this->out(json_encode($this->listActions('Permissions,NifaUsers')));
     }
 
     public function updateActions($plugins = null) {
         $actions = $this->listActions($plugins);
         //$this->out(json_encode($actions));
         foreach($actions as $action) {
-            //$action = $this->createEntity($actions);
-            //$this->out(json_encode($action));
 
-            $entity = $this->createEntity($action);
-            if($result = $this->Actions->save($entity)) {
-                if($entity->isNew()) $this->out("Created " . implode(",", $action));
-                else $this->out("Updated " . implode(",", $action));
+            if(!$this->Actions->exists($action)) {
+                $entity = $this->Actions->newEntity($action);
+                if($this->Actions->save($entity)) {
+                    $this->out("Updated " . implode(",", $action));
+                } else {
+                    $this->out("Failed to save");
+                }
+
             } else {
-                $this->out("Failed to save " . implode(",", $action));
+                $this->out("Action already existed " . implode(",", $action));
             }
         }
     }
@@ -52,12 +54,20 @@ class ActionsShell extends Shell
         }
 
         $entity = $this->Actions->find()
-                    ->where($action)
-                    ->first();
-        if($entity) $action = $this->Actions->patchEntity($entity, $action);
-        else $action = $this->Actions->newEntity($action);
+                    ->where([
+                        'controller' => $action['controller'],
+                        'action' => $action['action']
+                    ]);
 
-        return $action;
+        if(array_key_exists('plugin', $action)) $entity->where(['plugin IS' => $action['plugin']]);
+        if(array_key_exists('prefix', $action)) $entity->where(['prefix IS' => $action['prefix']]);
+
+        $entity->first();
+
+        //if($entity) $entity = $this->Actions->patchEntity($entity, $action);
+        //else $entity = $this->Actions->newEntity($action);
+
+        return $entity;
     }
 
     private function listActions($plugins = null) {
@@ -98,11 +108,14 @@ class ActionsShell extends Shell
         //appActions
         $appResources = $this->getControllers();
         $pluginResources = [];
-        $pluginsArray = explode(",", $plugins);
+        if($plugins) {
+            $pluginsArray = explode(",", $plugins);
 
-        foreach($pluginsArray as $plugin) {
-            $pluginResources[$plugin] = $this->getControllers($plugin);
+            foreach($pluginsArray as $plugin) {
+                $pluginResources[$plugin] = $this->getControllers($plugin);
+            }
         }
+
 
         return ['app' => $appResources, 'plugins' => $pluginResources];
     }
@@ -118,7 +131,7 @@ class ActionsShell extends Shell
         $files = scandir(APP . "/Controller");
 
         if($pluginName) $files = scandir(Plugin::classPath($pluginName) . "Controller");
-        $this->out(Plugin::classPath($pluginName));
+        //$this->out(Plugin::classPath($pluginName));
         $appControllers = [];
         $ignoreList = [
             '.',
@@ -130,7 +143,7 @@ class ActionsShell extends Shell
         ];
 
         foreach($files as $file) {
-            $this->out(json_encode($file));
+            //$this->out(json_encode($file));
             
             if(!in_array($file, $ignoreList)) {
                 if(array_key_exists(1, explode('.', $file))) {
