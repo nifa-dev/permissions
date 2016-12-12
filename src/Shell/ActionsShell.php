@@ -36,11 +36,17 @@ class ActionsShell extends Shell
             if(array_key_exists('prefix', $action)) {
                 if($action['prefix'] == 'app') $action['prefix'] = null;
             }
+                //$this->out(json_encode($action));
+            $existingActions = $this->Actions->find()
+                                ->where(['controller' => $action['controller'], 'action' => $action['action']]);
 
-            if(!$this->Actions->exists($action)) {
+            if(array_key_exists('prefix', $action)) $existingActions->where(['prefix IS' => $action['prefix']]);
+            if(array_key_exists('plugin', $action)) $existingActions->where(['plugin IS' => $action['plugin']]);
+
+            if($existingActions->count() < 1) {
                 $entity = $this->Actions->newEntity($action);
                 if($this->Actions->save($entity)) {
-                    $this->out("Updated " . implode(",", $action));
+                    $this->out("Saved " . implode(",", $action));
                 } else {
                     $this->out("Failed to save");
                 }
