@@ -44,7 +44,6 @@ class AuthLinkHelper extends Helper
         }
         return false;
     }
-
     /**
      * Returns true if the target url is authorized for the logged in user
      *

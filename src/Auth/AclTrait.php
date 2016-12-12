@@ -36,7 +36,7 @@ trait AclTrait {
      * @return boolean
      */
     protected function _isAllowedRole($userRoles, array $allowedRoles) {
-        //Log::write('debug', $userRoles);
+
         if (is_string($userRoles)) {
             $userRoles = [$userRoles];
         }
@@ -73,7 +73,7 @@ trait AclTrait {
             ->contain(['Roles'])
             ->first();
 
-        //Log::write('debug', $url);
+        //Log::write('debug', $action);
 
         $allowedRoles = [];
         if($action) {

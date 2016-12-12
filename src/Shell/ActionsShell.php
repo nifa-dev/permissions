@@ -25,7 +25,7 @@ class ActionsShell extends Shell
 
     
     public function test() {
-        $this->out(json_encode($this->listActions('Permissions')));
+        $this->out(json_encode($this->getControllers('NifaUsers')));
     }
 
     public function updateActions($plugins = null) {
@@ -34,20 +34,13 @@ class ActionsShell extends Shell
         foreach($actions as $action) {
             //$action = $this->createEntity($actions);
             //$this->out(json_encode($action));
-            //remove app prefix
-            if(array_key_exists('prefix', $action)) {
-                if($action['prefix'] == 'app') $action['prefix'] = null;
-            }
 
-
-            if(!$this->Actions->exists($action)) {
-
-                $entity = $this->Actions->newEntity($action);
-                if($this->Actions->save($entity)) {
-                    $this->out("Saved " . implode(",", $action));
-                } else {
-                    $this->out("Failed to Save " . implode(",", $action));
-                }
+            $entity = $this->createEntity($action);
+            if($result = $this->Actions->save($entity)) {
+                if($entity->isNew()) $this->out("Created " . implode(",", $action));
+                else $this->out("Updated " . implode(",", $action));
+            } else {
+                $this->out("Failed to save " . implode(",", $action));
             }
         }
     }
@@ -125,6 +118,7 @@ class ActionsShell extends Shell
         $files = scandir(APP . "/Controller");
 
         if($pluginName) $files = scandir(Plugin::classPath($pluginName) . "Controller");
+        $this->out(Plugin::classPath($pluginName));
         $appControllers = [];
         $ignoreList = [
             '.',
@@ -136,6 +130,7 @@ class ActionsShell extends Shell
         ];
 
         foreach($files as $file) {
+            $this->out(json_encode($file));
             
             if(!in_array($file, $ignoreList)) {
                 if(array_key_exists(1, explode('.', $file))) {

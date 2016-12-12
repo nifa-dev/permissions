@@ -16,11 +16,12 @@ class CreateRoles extends AbstractMigration
         $table->addColumn('name', 'string', [
             'default' => null,
             'limit' => 255,
-            'null' => false,
+            'null' => true,
         ]);
         $table->addColumn('system_role', 'boolean', [
             'default' => null,
-            'null' => false,
+            'limit' => 255,
+            'null' => true,
         ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
