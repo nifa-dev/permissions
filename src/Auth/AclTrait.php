@@ -78,7 +78,7 @@ trait AclTrait {
         $allowedRoles = [];
         if($action) {
             foreach($action->roles as $role) {
-                $allowedRoles[] = $role->role_slug;
+                $allowedRoles[] = $role->id;
             }
         }
 
