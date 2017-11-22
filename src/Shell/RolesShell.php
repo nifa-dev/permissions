@@ -11,9 +11,9 @@ class RolesShell extends Shell
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('Actions');
-        $this->loadModel('Roles');
-        $this->loadModel('ActionsRoles');
+        $this->loadModel('Permissions.Actions');
+        $this->loadModel('Permissions.Roles');
+        $this->loadModel('Permissions.ActionsRoles');
     }
 
     public function assignAllToSuperuser() {
