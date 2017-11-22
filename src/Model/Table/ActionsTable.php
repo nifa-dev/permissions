@@ -29,6 +29,8 @@ class ActionsTable extends Table
         $this->displayField('id');
         $this->primaryKey('id');
 
+        $this->addBehavior('Timestamp');
+        
         $this->belongsToMany('Roles', [
             'foreignKey' => 'action_id',
             'targetForeignKey' => 'role_id',
