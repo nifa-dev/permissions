@@ -24,6 +24,8 @@ class RolesTable extends Table
         $this->displayField('name');
         $this->primaryKey('id');
 
+        $this->addBehavior('Timestamp');
+        
         /*$this->hasMany('Registrations', [
             'foreignKey' => 'role_id'
         ]);*/
